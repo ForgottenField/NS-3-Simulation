@@ -189,7 +189,7 @@ main (int argc, char *argv[])
     std::string congestion_control_algo = "TcpNewReno";
     bool tracing = true;
     bool pcap = true;
-    std::string file_name_prefix = "myassignment";
+    std::string file_name_prefix = "ATCN-Program";
 
     // Add hooks to the command line system
     CommandLine cmd;
