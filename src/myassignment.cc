@@ -1,0 +1,409 @@
+#include "ns3/core-module.h"
+#include "ns3/network-module.h"
+#include "ns3/internet-module.h"
+#include "ns3/point-to-point-module.h"
+#include "ns3/applications-module.h"
+#include "ns3/udp-echo-helper.h"
+#include "ns3/tcp-westwood.h"
+#include "ns3/tcp-vegas.h"
+#include "ns3/flow-monitor-module.h"
+
+using namespace ns3;
+
+static bool firstCwnd = true;
+static bool firstSshThr = true;
+static bool firstRtt = true;
+static bool firstRto = true;
+static Ptr<OutputStreamWrapper> cWndStream;
+static Ptr<OutputStreamWrapper> ssThreshStream;
+static Ptr<OutputStreamWrapper> rttStream;
+static Ptr<OutputStreamWrapper> rtoStream;
+static Ptr<OutputStreamWrapper> nextTxStream;
+static Ptr<OutputStreamWrapper> nextRxStream;
+static Ptr<OutputStreamWrapper> inFlightStream;
+static uint32_t cWndValue;
+static uint32_t ssThreshValue;
+
+void PrintRoutingTable(Ptr<Ipv4> ipv4) {
+    Ipv4StaticRoutingHelper helper;
+    Ptr<Ipv4StaticRouting> staticRouting = helper.GetStaticRouting(ipv4);
+
+    for (uint32_t i = 0; i < staticRouting->GetNRoutes(); ++i) {
+        Ipv4RoutingTableEntry entry;
+        entry = staticRouting->GetRoute(i);
+        std::cout << "Destination: " << entry.GetDest() << ", Gateway: " << entry.GetGateway()
+                  << ", Interface: " << entry.GetInterface() << std::endl;
+    }
+}
+
+static void
+CwndTracer (uint32_t oldval, uint32_t newval)
+{
+  if (firstCwnd)
+    {
+      *cWndStream->GetStream () << "0.0 " << oldval << std::endl;
+      firstCwnd = false;
+    }
+  *cWndStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval << std::endl;
+  cWndValue = newval;
+
+  if (!firstSshThr)
+    {
+      *ssThreshStream->GetStream () << Simulator::Now ().GetSeconds () << " " << ssThreshValue << std::endl;
+    }
+}
+
+static void
+SsThreshTracer (uint32_t oldval, uint32_t newval)
+{
+  if (firstSshThr)
+    {
+      *ssThreshStream->GetStream () << "0.0 " << oldval << std::endl;
+      firstSshThr = false;
+    }
+  *ssThreshStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval << std::endl;
+  ssThreshValue = newval;
+
+  if (!firstCwnd)
+    {
+      *cWndStream->GetStream () << Simulator::Now ().GetSeconds () << " " << cWndValue << std::endl;
+    }
+}
+
+static void
+RttTracer (Time oldval, Time newval)
+{
+  if (firstRtt)
+    {
+      *rttStream->GetStream () << "0.0 " << oldval.GetSeconds () << std::endl;
+      firstRtt = false;
+    }
+  *rttStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval.GetSeconds () << std::endl;
+}
+
+static void
+RtoTracer (Time oldval, Time newval)
+{
+  if (firstRto)
+    {
+      *rtoStream->GetStream () << "0.0 " << oldval.GetSeconds () << std::endl;
+      firstRto = false;
+    }
+  *rtoStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval.GetSeconds () << std::endl;
+}
+
+static void
+NextTxTracer (SequenceNumber32 old, SequenceNumber32 nextTx)
+{
+  NS_UNUSED (old);
+  *nextTxStream->GetStream () << Simulator::Now ().GetSeconds () << " " << nextTx << std::endl;
+}
+
+static void
+InFlightTracer (uint32_t old, uint32_t inFlight)
+{
+  NS_UNUSED (old);
+  *inFlightStream->GetStream () << Simulator::Now ().GetSeconds () << " " << inFlight << std::endl;
+}
+
+static void
+NextRxTracer (SequenceNumber32 old, SequenceNumber32 nextRx)
+{
+  NS_UNUSED (old);
+  *nextRxStream->GetStream () << Simulator::Now ().GetSeconds () << " " << nextRx << std::endl;
+}
+
+static void
+TraceCwnd (std::string cwnd_tr_file_name)
+{
+  AsciiTraceHelper ascii;
+  cWndStream = ascii.CreateFileStream (cwnd_tr_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/CongestionWindow", MakeCallback (&CwndTracer));
+}
+
+static void
+TraceSsThresh (std::string ssthresh_tr_file_name)
+{
+  AsciiTraceHelper ascii;
+  ssThreshStream = ascii.CreateFileStream (ssthresh_tr_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/SlowStartThreshold", MakeCallback (&SsThreshTracer));
+}
+
+static void
+TraceRtt (std::string rtt_tr_file_name)
+{
+  AsciiTraceHelper ascii;
+  rttStream = ascii.CreateFileStream (rtt_tr_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/RTT", MakeCallback (&RttTracer));
+}
+
+static void
+TraceRto (std::string rto_tr_file_name)
+{
+  AsciiTraceHelper ascii;
+  rtoStream = ascii.CreateFileStream (rto_tr_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/RTO", MakeCallback (&RtoTracer));
+}
+
+static void
+TraceNextTx (std::string &next_tx_seq_file_name)
+{
+  AsciiTraceHelper ascii;
+  nextTxStream = ascii.CreateFileStream (next_tx_seq_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/NextTxSequence", MakeCallback (&NextTxTracer));
+}
+
+static void
+TraceInFlight (std::string &in_flight_file_name)
+{
+  AsciiTraceHelper ascii;
+  inFlightStream = ascii.CreateFileStream (in_flight_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/BytesInFlight", MakeCallback (&InFlightTracer));
+}
+
+static void
+TraceNextRx (std::string &next_rx_seq_file_name)
+{
+  AsciiTraceHelper ascii;
+  nextRxStream = ascii.CreateFileStream (next_rx_seq_file_name.c_str ());
+  Config::ConnectWithoutContext ("/NodeList/6/$ns3::TcpL4Protocol/SocketList/1/RxBuffer/NextRxSequence", MakeCallback (&NextRxTracer));
+}
+
+int 
+main (int argc, char *argv[]) 
+{
+    // Define a logging component
+    NS_LOG_COMPONENT_DEFINE("MyTcpApplicationExample"); 
+
+    // Enable logging for specific modules or classes
+    //LogComponentEnable("OnOffApplication", LOG_LEVEL_INFO);
+    //LogComponentEnable("PacketSink", LOG_LEVEL_INFO);
+    
+    // Command-line arguments
+    uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
+    uint32_t tcpRateMbps = 2;   // TCP sending rate in Mbps
+    uint32_t bufferSize = 1000; // TCP buffer size in bytes
+    uint32_t queuingRouterBufferSize = 1000;
+    bool sack = true;
+    std::string recovery = "ns3::TcpClassicRecovery";
+    std::string congestion_control_algo = "TcpNewReno";
+    bool tracing = true;
+    bool pcap = true;
+    std::string file_name_prefix = "myassignment";
+
+    // Add hooks to the command line system
+    CommandLine cmd;
+    cmd.AddValue ("udpRate", "UDP sending rate in Mbps", udpRateMbps);
+    cmd.AddValue ("tcpRate", "TCP sending rate in Mbps", tcpRateMbps);
+    cmd.AddValue ("bufferSize", "TCP buffer size in bytes", bufferSize);
+    cmd.AddValue ("sack", "Enable or disable SACK option", sack);
+    cmd.AddValue ("recovery", "Recovery algorithm type to use (e.g., ns3::TcpPrrRecovery", recovery);
+    cmd.AddValue ("tracing", "Flag to enable/disable tracing", tracing);
+    cmd.AddValue ("congestion_control_algo", "Transport protocol to use: TcpNewReno, TcpLinuxReno, "
+                "TcpHybla, TcpHighSpeed, TcpHtcp, TcpVegas, TcpScalable, TcpVeno, "
+                "TcpBic, TcpYeah, TcpIllinois, TcpWestwood, TcpWestwoodPlus, TcpLedbat, "
+		        "TcpLp, TcpDctcp, TcpCubic, TcpBbr", congestion_control_algo);
+    cmd.Parse (argc, argv);
+
+    congestion_control_algo = std::string ("ns3::") + congestion_control_algo;
+
+    // Create nodes
+    NodeContainer TCPHost, UDPHost, routers, TCPServer, UDPSink;
+    TCPHost.Create(1);
+    UDPHost.Create(1);
+    routers.Create(4);
+    TCPServer.Create(1);
+    UDPSink.Create(1);
+
+    // Define and configure point-to-point links between nodes as topology
+    PointToPointHelper p2pHelper;
+	  p2pHelper.SetDeviceAttribute ("DataRate", StringValue ("10Mbps"));
+	  p2pHelper.SetChannelAttribute ("Delay", StringValue ("5ms"));
+
+    // Configure point-to-point NetDevice
+    NetDeviceContainer l_0 = p2pHelper.Install(TCPHost.Get(0), routers.Get(0));     // tcphost   --    R1
+	  NetDeviceContainer l_1 = p2pHelper.Install(routers.Get(0), routers.Get(1));     //    R1     --    R2
+	  NetDeviceContainer l_2 = p2pHelper.Install(routers.Get(1), routers.Get(2));     //    R2     --    R3
+	  NetDeviceContainer l_3 = p2pHelper.Install(routers.Get(2), routers.Get(3));     //    R3     --    R4
+	  NetDeviceContainer l_4 = p2pHelper.Install(routers.Get(3), TCPServer.Get(0));   //    R4     --  tcpserver
+    NetDeviceContainer l_5 = p2pHelper.Install(UDPHost.Get(0), routers.Get(1));     // udphost   --    R2
+    NetDeviceContainer l_6 = p2pHelper.Install(routers.Get(2), UDPSink.Get(0));     //    R3     --   udpsink
+
+    // Set the queuing buffer size of routers from the NetDeviceContainer l_2
+    Ptr<PointToPointNetDevice> p2pNetDevice = DynamicCast<PointToPointNetDevice>(l_2.Get(0));
+    p2pNetDevice->SetQueue(new DropTailQueue<Packet> ());
+    Ptr<Queue<Packet>> queue = p2pNetDevice->GetQueue();
+    queue->SetMaxSize(std::to_string(queuingRouterBufferSize) + "kB");
+    std::cout << queue->GetMaxSize() << "\n";
+
+    // Install Internet Stack
+    InternetStackHelper stack;
+    stack.Install (TCPHost);
+    stack.Install (UDPHost);
+    stack.Install (routers);
+    stack.Install (TCPServer);
+    stack.Install (UDPSink);
+
+    // Assign IP Addresses
+    Ipv4AddressHelper address;
+    address.SetBase ("10.1.1.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_0_intf = address.Assign (l_0);  //10.1.1.1 - 10.1.1.2
+    address.SetBase ("10.1.2.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_1_intf = address.Assign (l_1);  //10.1.2.1 - 10.1.2.2
+    address.SetBase ("10.1.3.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_2_intf = address.Assign (l_2);  //10.1.3.1 - 10.1.3.2
+    address.SetBase ("10.1.4.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_3_intf = address.Assign (l_3);  //10.1.4.1 - 10.1.4.2
+    address.SetBase ("10.1.5.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_4_intf = address.Assign (l_4);  //10.1.5.1 - 10.1.5.2
+    address.SetBase ("10.1.6.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_5_intf = address.Assign (l_5);  //10.1.6.1 - 10.1.6.2
+    address.SetBase ("10.1.7.0", "255.255.255.0");
+    Ipv4InterfaceContainer l_6_intf = address.Assign (l_6);  //10.1.7.1 - 10.1.7.2
+
+    // Print IP addresses of interface l_0_intf
+    for (uint32_t i = 0; i < l_0_intf.GetN(); ++i) {
+        Ipv4Address addr = l_0_intf.GetAddress(i);
+        std::cout << "Interface " << i << " IP Address: " << addr << std::endl;
+    }
+
+    for (uint32_t i = 0; i < l_6_intf.GetN(); ++i) {
+        Ipv4Address addr = l_6_intf.GetAddress(i);
+        std::cout << "Interface " << i << " IP Address: " << addr << std::endl;
+    }
+
+    // Configure routing paths on routers
+    Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+
+    // Print the routing table for a specific router (e.g., node 0)
+    uint32_t nodeId = 0; // Replace with the node ID of the router you want to inspect
+    Ptr<Ipv4> ipv4 = routers.Get(nodeId)->GetObject<Ipv4>();
+    PrintRoutingTable(ipv4);
+
+    uint16_t tcp_server_port = 8080;
+
+    // Configure the TCP stack
+    // 2 MB of TCP buffer
+    Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (1 << 21));
+    Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (1 << 21));
+    Config::SetDefault ("ns3::TcpSocketBase::Sack", BooleanValue (sack));
+    Config::SetDefault ("ns3::TcpL4Protocol::RecoveryType", TypeIdValue (TypeId::LookupByName (recovery)));
+    
+    // Select TCP Congestion Control Algorithms
+    if (congestion_control_algo.compare ("ns3::TcpWestwoodPlus") == 0)
+    {
+        // TcpWestwoodPlus is not an actual TypeId name; we need TcpWestwood here
+        Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpWestwood::GetTypeId ()));
+        // the default protocol type in ns3::TcpWestwood is WESTWOOD
+        Config::SetDefault ("ns3::TcpWestwood::ProtocolType", EnumValue (TcpWestwood::WESTWOODPLUS));
+    }
+    else
+    {
+        TypeId tcpTid;
+        NS_ABORT_MSG_UNLESS (TypeId::LookupByNameFailSafe (congestion_control_algo, &tcpTid), "TypeId " << congestion_control_algo << " not found");
+        Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TypeId::LookupByName (congestion_control_algo)));
+    }
+
+    float time_to_stop_data = 1.0;
+
+    // Create a TCP sender (OnOffApplication)
+    OnOffHelper tcpOnOffHelper("ns3::TcpSocketFactory", Address());
+    tcpOnOffHelper.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
+    tcpOnOffHelper.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+    tcpOnOffHelper.SetAttribute("DataRate", DataRateValue(DataRate(tcpRateMbps * 1000000)));
+
+    // Set the server address to the destination's IP address and port
+    Ipv4Address serverAddress = TCPServer.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+    InetSocketAddress serverSocketAddress(serverAddress, tcp_server_port);
+    tcpOnOffHelper.SetAttribute("Remote", AddressValue(serverSocketAddress));
+
+    // Install the OnOffApplication on the source node
+    ApplicationContainer tcpSourceApps = tcpOnOffHelper.Install(TCPHost); // Replace with your source node
+    tcpSourceApps.Start(Seconds(0.0));
+    NS_LOG_UNCOND("TcpOnOffApplication started");
+
+    // Stop the applications
+    tcpSourceApps.Stop(Seconds(time_to_stop_data));
+    NS_LOG_UNCOND("TcpOnOffApplication stopped");
+
+    // Create server and client applications
+    PacketSinkHelper tcpSinkHelper("ns3::TcpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), tcp_server_port));
+    ApplicationContainer tcpSinkApps = tcpSinkHelper.Install(TCPServer); // Install on a specific node
+    tcpSinkApps.Start (Seconds(0.0));
+
+    // Install UDP applications
+    // Create a UDP echo server
+    uint16_t udp_server_port = 9;
+
+    OnOffHelper udpOnOffHelper("ns3::UdpSocketFactory", Address());
+    udpOnOffHelper.SetAttribute("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1]"));
+    udpOnOffHelper.SetAttribute("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+    udpOnOffHelper.SetAttribute("DataRate", DataRateValue(DataRate(udpRateMbps * 1000000)));
+
+    Ipv4Address udpServerAddress = UDPSink.Get(0)->GetObject<Ipv4>()->GetAddress(1, 0).GetLocal();
+    InetSocketAddress udpServerSocketAddress(udpServerAddress, udp_server_port);
+    udpOnOffHelper.SetAttribute("Remote", AddressValue(udpServerSocketAddress));
+
+    ApplicationContainer udpSourceApps = udpOnOffHelper.Install(UDPHost); // Replace with your source node
+    udpSourceApps.Start(Seconds(0.0));
+    NS_LOG_UNCOND("UdpOnOffApplication started");
+    udpSourceApps.Stop(Seconds(time_to_stop_data));
+    NS_LOG_UNCOND("UdpOnOffApplication stopped");
+
+    PacketSinkHelper udpSinkHelper("ns3::UdpSocketFactory", InetSocketAddress(Ipv4Address::GetAny(), udp_server_port));
+    ApplicationContainer udpSinkApps = udpSinkHelper.Install(UDPSink); // Install on a specific node
+    udpSinkApps.Start (Seconds(0.0));
+
+    // Set up tracing if enabled
+    if (tracing)
+    {
+        std::ofstream ascii;
+        Ptr<OutputStreamWrapper> ascii_wrap;
+        ascii.open ((file_name_prefix + "-ascii").c_str ());
+        ascii_wrap = new OutputStreamWrapper ((file_name_prefix + "-ascii").c_str (), std::ios::out);
+        stack.EnableAsciiIpv4All (ascii_wrap);
+
+        Simulator::Schedule (Seconds (0.00001), &TraceCwnd, file_name_prefix + "-cwnd.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceSsThresh, file_name_prefix + "-ssth.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceRtt, file_name_prefix + "-rtt.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceRto, file_name_prefix + "-rto.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceNextTx, file_name_prefix + "-next-tx.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceInFlight, file_name_prefix + "-inflight.data");
+        Simulator::Schedule (Seconds (0.1), &TraceNextRx, file_name_prefix + "-next-rx.data");
+    }
+
+    // Monitor the flows
+    Ptr<FlowMonitor> flowMonitor;
+    FlowMonitorHelper flowHelper;
+    flowMonitor = flowHelper.InstallAll();
+
+    if(pcap){
+        p2pHelper.EnablePcapAll(file_name_prefix, true);
+    }
+
+    // Configure and run the simulation
+    Simulator::Stop (Seconds (10.0));
+    Simulator::Run ();
+
+    // Check for lost packets and serialize flow data to XML
+    flowMonitor->CheckForLostPackets();
+    flowMonitor->SerializeToXmlFile("flow-monitor.xml", true, true);
+
+    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
+    FlowMonitor::FlowStatsContainer stats = flowMonitor->GetFlowStats();
+
+    for (auto it = stats.begin(); it != stats.end(); ++it) {
+        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(it->first);
+        std::cout << "Flow ID: " << it->first << std::endl;
+        std::cout << "Source IP: " << t.sourceAddress << "  Destination IP: " << t.destinationAddress << std::endl;
+        std::cout << "Throughput: " << it->second.txBytes * 8.0 / time_to_stop_data / 1000 / 1000 << " Mbps" << std::endl;
+        std::cout << "Packet Loss Rate: " << (1.0 - it->second.rxPackets / it->second.txPackets) << std::endl;
+    }
+
+    // Cleanup and destroy the simulation
+    tcpSinkApps.Stop (Seconds (10.0));
+    udpSinkApps.Stop (Seconds(10.0));
+    Simulator::Destroy ();
+    
+    return 0;
+}
