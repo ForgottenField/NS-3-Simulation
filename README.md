@@ -71,17 +71,24 @@ Run the demo simulator `scratch-simulator.cc` file under the path of `scratch/`.
 **How to run the ATCN-Program**
 ---
 
-It is very strange that the source program can only run normally in the `scratch` directory. It may be the internal mechanism of NS-3.
+It is weird that the source program can only run normally in the `scratch` directory, which may be the internal mechanism of NS-3.
 
 ```bash
 cd /home/hostname/ns-3-dev
 git clone https://github.com/ForgottenField/NS3-TCP-Congestion-Simulation.git
-mv NS3-TCP-Congestion-Simulation/src/ATCN-Program.cc scratch/
+cp NS3-TCP-Congestion-Simulation/src/ATCN-Program.cc scratch/
 ./waf --run scratch/ATCN-Program.cc
 ```
 
+**Fail to build NS-3 environment**
+---
 
+If the command `./waf build` can not be executed successfully, please use the following command to check whether there is sufficient memory allocated for wsl.   
 
+```bash
+free -g
+```
 
+This command will show your memory size in gibibytes, and you can change the `-g` option to output in different forms.
 
-
+After that, you can refer to [this answer](https://learn.microsoft.com/en-us/answers/questions/1296124/how-to-increase-memory-and-cpu-limits-for-wsl2-win) to increase your virtual memory in wsl.

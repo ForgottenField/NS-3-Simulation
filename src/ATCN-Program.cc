@@ -184,7 +184,11 @@ main (int argc, char *argv[])
     uint32_t tcpRateMbps = 2;   // TCP sending rate in Mbps
     uint32_t bufferSize = 1000; // TCP buffer size in bytes
     uint32_t queuingRouterBufferSize = 1000;
+    // MTU refers to payload in Data Link Layer, while MSS refers to payload in Transport Layer
+    // MTU = MSS + 20 + 20
+    uint32_t mtu_bytes = 400;
     bool sack = true;
+    bool tcpNoDelay = false;
     std::string recovery = "ns3::TcpClassicRecovery";
     std::string congestion_control_algo = "TcpNewReno";
     bool tracing = true;
@@ -196,6 +200,7 @@ main (int argc, char *argv[])
     cmd.AddValue ("udpRate", "UDP sending rate in Mbps", udpRateMbps);
     cmd.AddValue ("tcpRate", "TCP sending rate in Mbps", tcpRateMbps);
     cmd.AddValue ("bufferSize", "TCP buffer size in bytes", bufferSize);
+    cmd.AddValue ("mtu", "Size of IP packets to send in bytes", mtu_bytes);
     cmd.AddValue ("sack", "Enable or disable SACK option", sack);
     cmd.AddValue ("recovery", "Recovery algorithm type to use (e.g., ns3::TcpPrrRecovery", recovery);
     cmd.AddValue ("tracing", "Flag to enable/disable tracing", tracing);
@@ -283,9 +288,12 @@ main (int argc, char *argv[])
     uint16_t tcp_server_port = 8080;
 
     // Configure the TCP stack
-    // 2 MB of TCP buffer
-    Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (1 << 21));
-    Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (1 << 21));
+    // 64 KB of TCP buffer
+    Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (1 << 16));
+    Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (1 << 16));
+    Config::SetDefault ("ns3::TcpSocket::SegmentSize", UintegerValue (mtu_bytes - 20 - 20));
+    // Turn off Nagle's Algorithm
+    Config::SetDefault ("ns3::TcpSocket::TcpNoDelay", BooleanValue (tcpNoDelay));
     Config::SetDefault ("ns3::TcpSocketBase::Sack", BooleanValue (sack));
     Config::SetDefault ("ns3::TcpL4Protocol::RecoveryType", TypeIdValue (TypeId::LookupByName (recovery)));
     
@@ -318,7 +326,24 @@ main (int argc, char *argv[])
     tcpOnOffHelper.SetAttribute("Remote", AddressValue(serverSocketAddress));
 
     // Install the OnOffApplication on the source node
-    ApplicationContainer tcpSourceApps = tcpOnOffHelper.Install(TCPHost); // Replace with your source node
+    ApplicationContainer tcpSourceApps = tcpOnOffHelper.Install(TCPHost);
+
+    // Print the basic attributes of TCP socket
+    std::cout << std::endl << "Print the basic attributes of TCP socket as follows:" << std::endl;
+    TypeId tid = TcpSocket::GetTypeId();
+    for(size_t i = 0; i < tid.GetAttributeN(); ++i)
+    {
+      TypeId::AttributeInformation attr = tid.GetAttribute(i);
+      Ptr<const AttributeAccessor> accessor = attr.accessor;
+      std::cout << "attr" << i << ":" << std::endl;
+      std::cout << "name: " << attr.name << std::endl;
+      std::cout << "flags: " << attr.flags << std::endl;
+      std::cout << "originalInitialValue: " << attr.originalInitialValue->SerializeToString(attr.checker) << std::endl;
+      std::cout << "initialValue: " << attr.initialValue->SerializeToString(attr.checker) << std::endl;
+      std::cout << std::endl;
+    }
+
+    // Start the applications
     tcpSourceApps.Start(Seconds(0.0));
     NS_LOG_UNCOND("TcpOnOffApplication started");
 
@@ -344,7 +369,7 @@ main (int argc, char *argv[])
     InetSocketAddress udpServerSocketAddress(udpServerAddress, udp_server_port);
     udpOnOffHelper.SetAttribute("Remote", AddressValue(udpServerSocketAddress));
 
-    ApplicationContainer udpSourceApps = udpOnOffHelper.Install(UDPHost); // Replace with your source node
+    ApplicationContainer udpSourceApps = udpOnOffHelper.Install(UDPHost); 
     udpSourceApps.Start(Seconds(0.0));
     NS_LOG_UNCOND("UdpOnOffApplication started");
     udpSourceApps.Stop(Seconds(time_to_stop_data));
