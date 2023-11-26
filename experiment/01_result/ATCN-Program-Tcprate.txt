@@ -1,0 +1,420 @@
+TCP_rate: 1Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 1.19456 Mbps
+Transmission Delay: +2.70079e+07ns
+Packet Loss Rate: 0
+Jitter: +221011ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.631e+07ns
+Packet Loss Rate: 0
+Jitter: +12102ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.097792 Mbps
+Transmission Delay: +2.52161e+07ns
+Packet Loss Rate: 0
+Jitter: +68ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 3Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 3.48106 Mbps
+Transmission Delay: +2.8806e+07ns
+Packet Loss Rate: 0
+Jitter: +254495ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.66701e+07ns
+Packet Loss Rate: 0
+Jitter: +74452ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.274176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +24ns
+
+TCP_rate: 4Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 4.36227 Mbps
+Transmission Delay: +2.86213e+07ns
+Packet Loss Rate: 0
+Jitter: +275017ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.65354e+07ns
+Packet Loss Rate: 0
+Jitter: +86426ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.346144 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +19ns
+
+TCP_rate: 5Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 5.18934 Mbps
+Transmission Delay: +2.83959e+07ns
+Packet Loss Rate: 0
+Jitter: +231661ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.6575e+07ns
+Packet Loss Rate: 0
+Jitter: +90745ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.415616 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +16ns
+
+TCP_rate: 6Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 6.02134 Mbps
+Transmission Delay: +2.84995e+07ns
+Packet Loss Rate: 0
+Jitter: +234611ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.68689e+07ns
+Packet Loss Rate: 0
+Jitter: +100578ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.485504 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +13ns
+
+TCP_rate: 7Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 6.848 Mbps
+Transmission Delay: +2.98955e+07ns
+Packet Loss Rate: 0
+Jitter: +238451ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.78417e+07ns
+Packet Loss Rate: 0
+Jitter: +130399ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.554976 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +12ns
+
+TCP_rate: 8Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.23155 Mbps
+Transmission Delay: +4.37572e+07ns
+Packet Loss Rate: 0
+Jitter: +243611ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.77749e+07ns
+Packet Loss Rate: 0
+Jitter: +255493ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.587008 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 9Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.35365e+07ns
+Packet Loss Rate: 0
+Jitter: +245988ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76277e+07ns
+Packet Loss Rate: 0
+Jitter: +196990ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 10Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.35656e+07ns
+Packet Loss Rate: 0
+Jitter: +248251ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76257e+07ns
+Packet Loss Rate: 0
+Jitter: +191565ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 11Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.35806e+07ns
+Packet Loss Rate: 0
+Jitter: +240442ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76331e+07ns
+Packet Loss Rate: 0
+Jitter: +214623ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 12Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.35989e+07ns
+Packet Loss Rate: 0
+Jitter: +245417ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76562e+07ns
+Packet Loss Rate: 0
+Jitter: +195634ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 13Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.36097e+07ns
+Packet Loss Rate: 0
+Jitter: +251063ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76683e+07ns
+Packet Loss Rate: 0
+Jitter: +199703ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 14Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.36185e+07ns
+Packet Loss Rate: 0
+Jitter: +252331ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76866e+07ns
+Packet Loss Rate: 0
+Jitter: +198347ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 15Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.23114 Mbps
+Transmission Delay: +4.36283e+07ns
+Packet Loss Rate: 0
+Jitter: +250684ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76887e+07ns
+Packet Loss Rate: 0
+Jitter: +192921ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586592 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 16Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.23114 Mbps
+Transmission Delay: +4.36365e+07ns
+Packet Loss Rate: 0
+Jitter: +249282ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.76907e+07ns
+Packet Loss Rate: 0
+Jitter: +191565ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586592 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 17Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.23114 Mbps
+Transmission Delay: +4.36419e+07ns
+Packet Loss Rate: 0
+Jitter: +246756ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.77436e+07ns
+Packet Loss Rate: 0
+Jitter: +199499ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586592 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 18Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.36478e+07ns
+Packet Loss Rate: 0
+Jitter: +246728ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.7709e+07ns
+Packet Loss Rate: 0
+Jitter: +195634ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 19Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.3653e+07ns
+Packet Loss Rate: 0
+Jitter: +246354ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.77117e+07ns
+Packet Loss Rate: 0
+Jitter: +191565ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+
+TCP_rate: 20Mbps
+UDP_rate: 1Mbps
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 7.22621 Mbps
+Transmission Delay: +4.36592e+07ns
+Packet Loss Rate: 0
+Jitter: +247849ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +2.77219e+07ns
+Packet Loss Rate: 0
+Jitter: +191565ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.586176 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +11ns
+

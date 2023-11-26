@@ -7,6 +7,8 @@
 #include "ns3/tcp-westwood.h"
 #include "ns3/tcp-vegas.h"
 #include "ns3/flow-monitor-module.h"
+#include "ns3/netanim-module.h"
+#include "ns3/mobility-module.h"
 
 using namespace ns3;
 
@@ -178,6 +180,9 @@ main (int argc, char *argv[])
     // Enable logging for specific modules or classes
     //LogComponentEnable("OnOffApplication", LOG_LEVEL_INFO);
     //LogComponentEnable("PacketSink", LOG_LEVEL_INFO);
+    //PacketMetadata::Enable();
+    //LogComponentEnable("AnimationInterface", LOG_LEVEL_LOGIC);
+    //LogComponentEnable("Socket", LOG_LEVEL_FUNCTION);
     
     // Command-line arguments
     uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
@@ -188,16 +193,17 @@ main (int argc, char *argv[])
     // MTU = MSS + 20 + 20
     uint32_t mtu_bytes = 400;
     bool sack = true;
-    bool tcpNoDelay = false;
+    bool tcpNoDelay = true;
     std::string recovery = "ns3::TcpClassicRecovery";
     std::string congestion_control_algo = "TcpNewReno";
-    bool tracing = true;
-    bool pcap = true;
-    std::string file_name_prefix = "ATCN-Program";
+    bool tracing = false;
+    bool pcap = false;
+    std::string file_name_prefix = "ATCN-Program-Experiment/ATCN-Program";
+    std::string animFile = "ATCN_animation.xml" ;  // Name of file for animation output
 
     // Add hooks to the command line system
     CommandLine cmd;
-    cmd.AddValue ("udpRate", "UDP sending rate in Mbps", udpRateMbps);
+    cmd.AddValue ("udpRate", "UDP sending rate in Mbps", udpRateMbps); 
     cmd.AddValue ("tcpRate", "TCP sending rate in Mbps", tcpRateMbps);
     cmd.AddValue ("bufferSize", "TCP buffer size in bytes", bufferSize);
     cmd.AddValue ("mtu", "Size of IP packets to send in bytes", mtu_bytes);
@@ -208,6 +214,7 @@ main (int argc, char *argv[])
                 "TcpHybla, TcpHighSpeed, TcpHtcp, TcpVegas, TcpScalable, TcpVeno, "
                 "TcpBic, TcpYeah, TcpIllinois, TcpWestwood, TcpWestwoodPlus, TcpLedbat, "
 		        "TcpLp, TcpDctcp, TcpCubic, TcpBbr", congestion_control_algo);
+    cmd.AddValue ("animFile",  "File Name for Animation Output", animFile);
     cmd.Parse (argc, argv);
 
     congestion_control_algo = std::string ("ns3::") + congestion_control_algo;
@@ -296,6 +303,7 @@ main (int argc, char *argv[])
     Config::SetDefault ("ns3::TcpSocket::TcpNoDelay", BooleanValue (tcpNoDelay));
     Config::SetDefault ("ns3::TcpSocketBase::Sack", BooleanValue (sack));
     Config::SetDefault ("ns3::TcpL4Protocol::RecoveryType", TypeIdValue (TypeId::LookupByName (recovery)));
+    Config::SetDefault ("ns3::OnOffApplication::PacketSize", UintegerValue (512));
     
     // Select TCP Congestion Control Algorithms
     if (congestion_control_algo.compare ("ns3::TcpWestwoodPlus") == 0)
@@ -379,6 +387,57 @@ main (int argc, char *argv[])
     ApplicationContainer udpSinkApps = udpSinkHelper.Install(UDPSink); // Install on a specific node
     udpSinkApps.Start (Seconds(0.0));
 
+    MobilityHelper mobility;
+    mobility.SetMobilityModel ("ns3::ConstantPositionMobilityModel");
+    mobility.Install (TCPHost);
+    mobility.Install (TCPServer);
+    mobility.Install (routers);
+    mobility.Install (UDPHost);
+    mobility.Install (UDPSink);
+
+    // Create the animation object and configure for specified output
+    AnimationInterface anim (animFile);
+    anim.SetMaxPktsPerTraceFile(0xFFFFFF);
+    anim.SetMobilityPollInterval (Seconds (1));
+    anim.EnablePacketMetadata(true); // Enable packet animation
+    anim.EnableIpv4RouteTracking("routingtable-experiment-0.csv", Seconds(0), Seconds(10));
+
+    // Set TCP nodes as red 
+    anim.UpdateNodeDescription (TCPHost.Get (0), "TCPHost"); 
+    anim.UpdateNodeColor (TCPHost.Get (0), 255, 0, 0);
+    anim.UpdateNodeDescription (TCPServer.Get (0), "TCPServer"); 
+    anim.UpdateNodeColor (TCPServer.Get (0), 255, 0, 0);
+    
+    // Set udp nodes as green
+    anim.UpdateNodeDescription (UDPHost.Get (0), "UDPHost"); 
+    anim.UpdateNodeColor (UDPHost.Get (0), 0, 255, 0);
+    anim.UpdateNodeDescription (UDPSink.Get (0), "UDPSink"); 
+    anim.UpdateNodeColor (UDPSink.Get (0), 0, 255, 0);
+
+    // Set router nodes as blue
+    for (uint32_t i = 0; i < routers.GetN (); ++i)
+    {
+      anim.UpdateNodeDescription (routers.Get (i), "router"); 
+      anim.UpdateNodeColor (routers.Get (i), 0, 0, 255); 
+    }
+
+    // Set constant position of each node
+    Ptr<ConstantPositionMobilityModel> s1 = TCPHost.Get (0)->GetObject<ConstantPositionMobilityModel> ();
+    Ptr<ConstantPositionMobilityModel> s2 = TCPServer.Get (0)->GetObject<ConstantPositionMobilityModel> ();
+    s1->SetPosition (Vector ( 0.0, 150.0, 0 ));
+    s2->SetPosition (Vector ( 500.0, 150.0, 0 ));
+
+    Ptr<ConstantPositionMobilityModel> s3 = UDPHost.Get (0)->GetObject<ConstantPositionMobilityModel> ();
+    Ptr<ConstantPositionMobilityModel> s4 = UDPSink.Get (0)->GetObject<ConstantPositionMobilityModel> ();
+    s3->SetPosition (Vector ( 200.0, 50.0, 0 ));
+    s4->SetPosition (Vector ( 300.0, 250.0, 0 ));
+
+    for (uint32_t i = 0; i < routers.GetN (); ++i)
+    {
+      Ptr<ConstantPositionMobilityModel> s = routers.Get (i)->GetObject<ConstantPositionMobilityModel> ();
+      s->SetPosition (Vector ( 0.0 + 100.0 * (i + 1), 150.0, 0 ));
+    }
+
     // Set up tracing if enabled
     if (tracing)
     {
@@ -417,13 +476,23 @@ main (int argc, char *argv[])
     Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
     FlowMonitor::FlowStatsContainer stats = flowMonitor->GetFlowStats();
 
-    for (auto it = stats.begin(); it != stats.end(); ++it) {
+    // Open a file for writing
+    std::ofstream outputFile(file_name_prefix + "-Udprate.txt", std::ios::app);
+    outputFile << "TCP_rate: " << tcpRateMbps << "Mbps" << std::endl;
+    outputFile << "UDP_rate: " << udpRateMbps << "Mbps" << std::endl;
+    for (auto it = stats.begin(); it != stats.end(); ++it) 
+    {
         Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(it->first);
-        std::cout << "Flow ID: " << it->first << std::endl;
-        std::cout << "Source IP: " << t.sourceAddress << "  Destination IP: " << t.destinationAddress << std::endl;
-        std::cout << "Throughput: " << it->second.txBytes * 8.0 / time_to_stop_data / 1000 / 1000 << " Mbps" << std::endl;
-        std::cout << "Packet Loss Rate: " << (1.0 - it->second.rxPackets / it->second.txPackets) << std::endl;
+        outputFile << "Flow ID: " << it->first << std::endl;
+        outputFile << "Source IP: " << t.sourceAddress << "  Destination IP: " << t.destinationAddress << std::endl;
+        outputFile << "Throughput: " << it->second.txBytes * 8.0 / time_to_stop_data / 1000 / 1000 << " Mbps" << std::endl;
+        outputFile << "Transmission Delay: " << it->second.delaySum / it->second.txPackets << std::endl;
+        outputFile << "Packet Loss Rate: " << (1.0 - it->second.rxPackets / it->second.txPackets) << std::endl;
+        outputFile << "Jitter: " << it->second.jitterSum / (it->second.txPackets - 1) << std::endl;
     }
+    outputFile << std::endl;
+
+    outputFile.close();
 
     // Cleanup and destroy the simulation
     tcpSinkApps.Stop (Seconds (10.0));
