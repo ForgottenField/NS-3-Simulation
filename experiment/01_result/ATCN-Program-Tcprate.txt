@@ -1,5 +1,9 @@
 TCP_rate: 1Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 1.19456 Mbps
@@ -21,6 +25,10 @@ Jitter: +68ns
 
 TCP_rate: 2Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 2.37578 Mbps
@@ -42,6 +50,10 @@ Jitter: +35ns
 
 TCP_rate: 3Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 3.48106 Mbps
@@ -63,6 +75,10 @@ Jitter: +24ns
 
 TCP_rate: 4Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 4.36227 Mbps
@@ -84,6 +100,10 @@ Jitter: +19ns
 
 TCP_rate: 5Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 5.18934 Mbps
@@ -105,6 +125,10 @@ Jitter: +16ns
 
 TCP_rate: 6Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 6.02134 Mbps
@@ -126,6 +150,10 @@ Jitter: +13ns
 
 TCP_rate: 7Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 6.848 Mbps
@@ -147,6 +175,10 @@ Jitter: +12ns
 
 TCP_rate: 8Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.23155 Mbps
@@ -168,6 +200,10 @@ Jitter: +11ns
 
 TCP_rate: 9Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -189,6 +225,10 @@ Jitter: +11ns
 
 TCP_rate: 10Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -210,6 +250,10 @@ Jitter: +11ns
 
 TCP_rate: 11Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -231,6 +275,10 @@ Jitter: +11ns
 
 TCP_rate: 12Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -252,6 +300,10 @@ Jitter: +11ns
 
 TCP_rate: 13Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -273,6 +325,10 @@ Jitter: +11ns
 
 TCP_rate: 14Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -294,6 +350,10 @@ Jitter: +11ns
 
 TCP_rate: 15Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.23114 Mbps
@@ -315,6 +375,10 @@ Jitter: +11ns
 
 TCP_rate: 16Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.23114 Mbps
@@ -336,6 +400,10 @@ Jitter: +11ns
 
 TCP_rate: 17Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.23114 Mbps
@@ -357,6 +425,10 @@ Jitter: +11ns
 
 TCP_rate: 18Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -378,6 +450,10 @@ Jitter: +11ns
 
 TCP_rate: 19Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -399,6 +475,10 @@ Jitter: +11ns
 
 TCP_rate: 20Mbps
 UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
 Flow ID: 1
 Source IP: 10.1.1.1  Destination IP: 10.1.5.2
 Throughput: 7.22621 Mbps
@@ -417,4 +497,3 @@ Throughput: 0.586176 Mbps
 Transmission Delay: +2.5216e+07ns
 Packet Loss Rate: 0
 Jitter: +11ns
-

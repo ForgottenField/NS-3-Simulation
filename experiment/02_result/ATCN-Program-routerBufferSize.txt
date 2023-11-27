@@ -1,0 +1,370 @@
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 2bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.001344 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 4bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.001344 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 8bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.001344 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 16bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.001344 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 32bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.001344 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 64bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.043712 Mbps
+Transmission Delay: +3.3632e+06ns
+Packet Loss Rate: 0.866667
+Jitter: +1142ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.000448 Mbps
+Transmission Delay: +2.5232e+07ns
+Packet Loss Rate: 0
+Jitter: 0
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 128bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.043712 Mbps
+Transmission Delay: +3.3632e+06ns
+Packet Loss Rate: 0.866667
+Jitter: +1142ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.000448 Mbps
+Transmission Delay: +2.5232e+07ns
+Packet Loss Rate: 0
+Jitter: 0
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 256bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 0.043712 Mbps
+Transmission Delay: +3.3632e+06ns
+Packet Loss Rate: 0.866667
+Jitter: +1142ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.000448 Mbps
+Transmission Delay: +2.5232e+07ns
+Packet Loss Rate: 0
+Jitter: 0
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 512bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.76394e+07ns
+Packet Loss Rate: 0
+Jitter: +235442ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +0ns
+Packet Loss Rate: 1
+Jitter: +0ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 1024bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.30243 Mbps
+Transmission Delay: +2.73199e+07ns
+Packet Loss Rate: 0.00569801
+Jitter: +359760ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.61347e+07ns
+Packet Loss Rate: 0.0122951
+Jitter: +52622ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.186944 Mbps
+Transmission Delay: +2.52323e+07ns
+Packet Loss Rate: 0
+Jitter: +757ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 2048bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77108e+07ns
+Packet Loss Rate: 0
+Jitter: +245024ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.6062e+07ns
+Packet Loss Rate: 0.0163934
+Jitter: +27074ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 4096bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 8192bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 16384bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 32768bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+
+TCP_rate: 2Mbps
+UDP_rate: 1Mbps
+tcp_buffer_size: 65536bytes
+router_buffer_size: 65536bytes
+MTU: 400bytes
+Nagle Algorithm: 1
+Flow ID: 1
+Source IP: 10.1.1.1  Destination IP: 10.1.5.2
+Throughput: 2.37578 Mbps
+Transmission Delay: +2.77419e+07ns
+Packet Loss Rate: 0
+Jitter: +248178ns
+Flow ID: 2
+Source IP: 10.1.6.1  Destination IP: 10.1.7.2
+Throughput: 1.05408 Mbps
+Transmission Delay: +1.63621e+07ns
+Packet Loss Rate: 0
+Jitter: +42798ns
+Flow ID: 3
+Source IP: 10.1.5.2  Destination IP: 10.1.1.1
+Throughput: 0.18848 Mbps
+Transmission Delay: +2.5216e+07ns
+Packet Loss Rate: 0
+Jitter: +35ns
+

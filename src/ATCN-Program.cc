@@ -187,25 +187,27 @@ main (int argc, char *argv[])
     // Command-line arguments
     uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
     uint32_t tcpRateMbps = 2;   // TCP sending rate in Mbps
-    uint32_t bufferSize = 1000; // TCP buffer size in bytes
-    uint32_t queuingRouterBufferSize = 1000;
+    uint32_t bufferSize = 16; // TCP buffer size
+    uint32_t routerBufferSize = 16;
     // MTU refers to payload in Data Link Layer, while MSS refers to payload in Transport Layer
     // MTU = MSS + 20 + 20
     uint32_t mtu_bytes = 400;
     bool sack = true;
     bool tcpNoDelay = true;
     std::string recovery = "ns3::TcpClassicRecovery";
-    std::string congestion_control_algo = "TcpNewReno";
-    bool tracing = false;
+    std::string congestion_control_algo = "TcpWestwood";
+    bool tracing = true;
     bool pcap = false;
-    std::string file_name_prefix = "ATCN-Program-Experiment/ATCN-Program";
+    bool monitor = false;
+    std::string file_name_prefix = "NS-3-Simulation/experiment/04_result/Westwood/ATCN-Program";
     std::string animFile = "ATCN_animation.xml" ;  // Name of file for animation output
 
     // Add hooks to the command line system
     CommandLine cmd;
     cmd.AddValue ("udpRate", "UDP sending rate in Mbps", udpRateMbps); 
     cmd.AddValue ("tcpRate", "TCP sending rate in Mbps", tcpRateMbps);
-    cmd.AddValue ("bufferSize", "TCP buffer size in bytes", bufferSize);
+    cmd.AddValue ("tcpBufferSize", "TCP buffer size", bufferSize);
+    cmd.AddValue ("routerBufferSize", "Router buffer size", routerBufferSize);
     cmd.AddValue ("mtu", "Size of IP packets to send in bytes", mtu_bytes);
     cmd.AddValue ("sack", "Enable or disable SACK option", sack);
     cmd.AddValue ("recovery", "Recovery algorithm type to use (e.g., ns3::TcpPrrRecovery", recovery);
@@ -245,7 +247,7 @@ main (int argc, char *argv[])
     Ptr<PointToPointNetDevice> p2pNetDevice = DynamicCast<PointToPointNetDevice>(l_2.Get(0));
     p2pNetDevice->SetQueue(new DropTailQueue<Packet> ());
     Ptr<Queue<Packet>> queue = p2pNetDevice->GetQueue();
-    queue->SetMaxSize(std::to_string(queuingRouterBufferSize) + "kB");
+    queue->SetMaxSize(std::to_string(1 << routerBufferSize) + "B");
     std::cout << queue->GetMaxSize() << "\n";
 
     // Install Internet Stack
@@ -295,9 +297,8 @@ main (int argc, char *argv[])
     uint16_t tcp_server_port = 8080;
 
     // Configure the TCP stack
-    // 64 KB of TCP buffer
-    Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (1 << 16));
-    Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (1 << 16));
+    Config::SetDefault ("ns3::TcpSocket::RcvBufSize", UintegerValue (1 << bufferSize));
+    Config::SetDefault ("ns3::TcpSocket::SndBufSize", UintegerValue (1 << bufferSize));
     Config::SetDefault ("ns3::TcpSocket::SegmentSize", UintegerValue (mtu_bytes - 20 - 20));
     // Turn off Nagle's Algorithm
     Config::SetDefault ("ns3::TcpSocket::TcpNoDelay", BooleanValue (tcpNoDelay));
@@ -438,6 +439,11 @@ main (int argc, char *argv[])
       s->SetPosition (Vector ( 0.0 + 100.0 * (i + 1), 150.0, 0 ));
     }
 
+    // Monitor the flows
+    Ptr<FlowMonitor> flowMonitor;
+    FlowMonitorHelper flowHelper;
+    flowMonitor = flowHelper.InstallAll();
+
     // Set up tracing if enabled
     if (tracing)
     {
@@ -447,19 +453,14 @@ main (int argc, char *argv[])
         ascii_wrap = new OutputStreamWrapper ((file_name_prefix + "-ascii").c_str (), std::ios::out);
         stack.EnableAsciiIpv4All (ascii_wrap);
 
-        Simulator::Schedule (Seconds (0.00001), &TraceCwnd, file_name_prefix + "-cwnd.data");
-        Simulator::Schedule (Seconds (0.00001), &TraceSsThresh, file_name_prefix + "-ssth.data");
-        Simulator::Schedule (Seconds (0.00001), &TraceRtt, file_name_prefix + "-rtt.data");
-        Simulator::Schedule (Seconds (0.00001), &TraceRto, file_name_prefix + "-rto.data");
-        Simulator::Schedule (Seconds (0.00001), &TraceNextTx, file_name_prefix + "-next-tx.data");
-        Simulator::Schedule (Seconds (0.00001), &TraceInFlight, file_name_prefix + "-inflight.data");
-        Simulator::Schedule (Seconds (0.1), &TraceNextRx, file_name_prefix + "-next-rx.data");
+        Simulator::Schedule (Seconds (0.00001), &TraceCwnd, file_name_prefix + "-cwnd.txt");
+        Simulator::Schedule (Seconds (0.00001), &TraceSsThresh, file_name_prefix + "-ssth.txt");
+        Simulator::Schedule (Seconds (0.00001), &TraceRtt, file_name_prefix + "-rtt.txt");
+        Simulator::Schedule (Seconds (0.00001), &TraceRto, file_name_prefix + "-rto.txt");
+        Simulator::Schedule (Seconds (0.00001), &TraceNextTx, file_name_prefix + "-next-tx.txt");
+        Simulator::Schedule (Seconds (0.00001), &TraceInFlight, file_name_prefix + "-inflight.txt");
+        Simulator::Schedule (Seconds (0.1), &TraceNextRx, file_name_prefix + "-next-rx.txt");
     }
-
-    // Monitor the flows
-    Ptr<FlowMonitor> flowMonitor;
-    FlowMonitorHelper flowHelper;
-    flowMonitor = flowHelper.InstallAll();
 
     if(pcap){
         p2pHelper.EnablePcapAll(file_name_prefix, true);
@@ -469,31 +470,44 @@ main (int argc, char *argv[])
     Simulator::Stop (Seconds (10.0));
     Simulator::Run ();
 
-    // Check for lost packets and serialize flow data to XML
-    flowMonitor->CheckForLostPackets();
-    flowMonitor->SerializeToXmlFile("flow-monitor.xml", true, true);
-
-    Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
-    FlowMonitor::FlowStatsContainer stats = flowMonitor->GetFlowStats();
-
-    // Open a file for writing
-    std::ofstream outputFile(file_name_prefix + "-Udprate.txt", std::ios::app);
-    outputFile << "TCP_rate: " << tcpRateMbps << "Mbps" << std::endl;
-    outputFile << "UDP_rate: " << udpRateMbps << "Mbps" << std::endl;
-    for (auto it = stats.begin(); it != stats.end(); ++it) 
+    if(monitor)
     {
-        Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(it->first);
-        outputFile << "Flow ID: " << it->first << std::endl;
-        outputFile << "Source IP: " << t.sourceAddress << "  Destination IP: " << t.destinationAddress << std::endl;
-        outputFile << "Throughput: " << it->second.txBytes * 8.0 / time_to_stop_data / 1000 / 1000 << " Mbps" << std::endl;
-        outputFile << "Transmission Delay: " << it->second.delaySum / it->second.txPackets << std::endl;
-        outputFile << "Packet Loss Rate: " << (1.0 - it->second.rxPackets / it->second.txPackets) << std::endl;
-        outputFile << "Jitter: " << it->second.jitterSum / (it->second.txPackets - 1) << std::endl;
+        // Check for lost packets and serialize flow data to XML
+        flowMonitor->CheckForLostPackets();
+        flowMonitor->SerializeToXmlFile("flow-monitor.xml", true, true);
+
+        Ptr<Ipv4FlowClassifier> classifier = DynamicCast<Ipv4FlowClassifier>(flowHelper.GetClassifier());
+        FlowMonitor::FlowStatsContainer stats = flowMonitor->GetFlowStats();
+
+        // Open a file for writing
+        std::ofstream outputFile(file_name_prefix + "-MTU.txt", std::ios::app);
+        outputFile << "TCP_rate: " << tcpRateMbps << "Mbps" << std::endl;
+        outputFile << "UDP_rate: " << udpRateMbps << "Mbps" << std::endl;
+        outputFile << "tcp_buffer_size: " << (1 << bufferSize) << "bytes" << std::endl;
+        outputFile << "router_buffer_size: " << (1 << routerBufferSize) << "bytes" << std::endl;
+        outputFile << "MTU: " << mtu_bytes << "bytes" << std::endl;
+        outputFile << "Nagle Algorithm: " << tcpNoDelay << std::endl;
+        for (auto it = stats.begin(); it != stats.end(); ++it) 
+        {
+            Ipv4FlowClassifier::FiveTuple t = classifier->FindFlow(it->first);
+            outputFile << "Flow ID: " << it->first << std::endl;
+            outputFile << "Source IP: " << t.sourceAddress << "  Destination IP: " << t.destinationAddress << std::endl;
+            outputFile << "Throughput: " << it->second.txBytes * 8.0 / time_to_stop_data / 1000 / 1000 << " Mbps" << std::endl;
+            outputFile << "Transmission Delay: " << it->second.delaySum / it->second.txPackets << std::endl;
+            outputFile << "Packet Loss Rate: " << (1.0 - (it->second.rxPackets * 1.0) / it->second.txPackets) << std::endl;
+            if(it->second.txPackets <= 1)
+            {
+                outputFile << "Jitter: " <<  0  << std::endl;
+            }
+            else
+            {
+                outputFile << "Jitter: " << it->second.jitterSum / (it->second.txPackets - 1) << std::endl;
+            }
+        }
+        outputFile << std::endl;
+        outputFile.close();
     }
-    outputFile << std::endl;
-
-    outputFile.close();
-
+    
     // Cleanup and destroy the simulation
     tcpSinkApps.Stop (Seconds (10.0));
     udpSinkApps.Stop (Seconds(10.0));
