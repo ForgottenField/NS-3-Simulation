@@ -7,10 +7,30 @@ The ATCN-Program is written to simulate the Congestion Control Process in TCP in
 ```bash
 .
 ├── README.md
+├── experiment
+│   ├── 01_result
+│   │   ├── ATCN-Program-Tcprate.txt
+│   │   └── ATCN-Program-Udprate.txt
+│   ├── 02_result
+│   │   ├── ATCN-Program-routerBufferSize.txt
+│   │   └── ATCN-Program-tcpBufferSize.txt
+│   ├── 03_result
+│   │   └── ATCN-Program-MTU.txt
+│   ├── 04_result
+│   │   └── NewReno
+│   │       ├── ATCN-Program-ascii
+│   │       ├── ATCN-Program-cwnd.txt
+│   │       ├── ATCN-Program-inflight.txt
+│   │       ├── ATCN-Program-next-rx.txt
+│   │       ├── ATCN-Program-next-tx.txt
+│   │       ├── ATCN-Program-rto.txt
+│   │       ├── ATCN-Program-rtt.txt
+│   │       └── ATCN-Program-ssth.txt
+│   └── ATCN_experiment_report.pptx
 ├── sample
-│   └── atcn-case-study.cc # sample code covered in class.
+│   └── atcn-case-study.cc
 └── src
-    └── ATCN-Program.cc # source code used to simulate TCP congestion control process.
+    └── ATCN-Program.cc
 ```
 
 ## Overview of NS-3 Simulation Environment Setup through WSL2
