@@ -51,12 +51,24 @@ def process_data(data, qos_parameter):
 
 def plot_figure(x, y, xlabel, ylabel, title, filename):
     plt.plot(x, y, marker='o')
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
+    plt.xlabel(f'{xlabel} (Mbps)')
+    plt.ylabel(f'{ylabel}')
+    plt.title(f'{title} vs. {xlabel} (Mbps)')
     plt.grid(True)
     plt.savefig(filename)
     plt.close()
+
+def get_unit(qos_parameter):
+    if qos_parameter == 'Throughput':
+        return 'Mbps'
+    elif qos_parameter == 'Transmission Delay':
+        return 'e+07ns'
+    elif qos_parameter == 'Packet Loss Rate':
+        return ''
+    elif qos_parameter == 'Jitter':
+        return 'ns'
+    else:
+        return 'units'
 
 if __name__ == "__main__":
     file_path = "ATCN-Program-Tcprate.txt"
@@ -64,5 +76,6 @@ if __name__ == "__main__":
     #print(data)
     for qos_parameter in ['Throughput', 'Transmission Delay', 'Packet Loss Rate', 'Jitter']:
         tcp_rates, qos_values = process_data(data, qos_parameter)
+        unit = get_unit(qos_parameter)  # Implement get_unit function based on your requirements
         plot_filename = f'{qos_parameter}_vs_TCP_Rate.png'
-        plot_figure(tcp_rates, qos_values, 'TCP Rate (Mbps)', qos_parameter, f'{qos_parameter} vs. TCP Rate', plot_filename)
+        plot_figure(tcp_rates, qos_values, 'TCP Rate', f'{qos_parameter} ({unit})', f'{qos_parameter} vs. TCP Rate', plot_filename)
