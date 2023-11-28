@@ -78,4 +78,4 @@ if __name__ == "__main__":
         mtu_rates, qos_values = process_data(data, qos_parameter)
         unit = get_unit(qos_parameter)  # Implement get_unit function based on your requirements
         plot_filename = f'{qos_parameter}_vs_MTU.png'
-        plot_figure(mtu_rates, qos_values, 'MTU', f'{qos_parameter} ({unit})', f'{qos_parameter} vs. MTU', plot_filename)
+        plot_figure(mtu_rates, qos_values, 'MTU', f'{qos_parameter} ({unit})', f'{qos_parameter}', plot_filename)

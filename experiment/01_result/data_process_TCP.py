@@ -78,4 +78,4 @@ if __name__ == "__main__":
         tcp_rates, qos_values = process_data(data, qos_parameter)
         unit = get_unit(qos_parameter)  # Implement get_unit function based on your requirements
         plot_filename = f'{qos_parameter}_vs_TCP_Rate.png'
-        plot_figure(tcp_rates, qos_values, 'TCP Rate', f'{qos_parameter} ({unit})', f'{qos_parameter} vs. TCP Rate', plot_filename)
+        plot_figure(tcp_rates, qos_values, 'TCP Rate', f'{qos_parameter} ({unit})', f'{qos_parameter}', plot_filename)
