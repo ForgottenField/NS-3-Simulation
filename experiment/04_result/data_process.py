@@ -20,6 +20,8 @@ def plot_figure(times, cwnd_sizes, output_file):
     plt.ylabel('Congestion Window Size (MSS)')
     plt.title('Congestion Window Size over Time')
     plt.grid(True)
+    # Adjust the x-axis limits
+    plt.xlim(min(times), max(times))
     plt.savefig(output_file)  # Save the figure to a PNG file
     plt.close()
 
