@@ -199,7 +199,7 @@ main (int argc, char *argv[])
     bool tracing = true;
     bool pcap = false;
     bool monitor = false;
-    std::string file_name_prefix = "NS-3-Simulation/experiment/04_result/Westwood/ATCN-Program";
+    std::string file_name_prefix = "NS-3-Simulation/experiment/04_result/NewReno/ATCN-Program";
     std::string animFile = "ATCN_animation.xml" ;  // Name of file for animation output
 
     // Add hooks to the command line system
@@ -321,7 +321,7 @@ main (int argc, char *argv[])
         Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TypeId::LookupByName (congestion_control_algo)));
     }
 
-    float time_to_stop_data = 1.0;
+    float time_to_stop_data = 10.0;
 
     // Create a TCP sender (OnOffApplication)
     OnOffHelper tcpOnOffHelper("ns3::TcpSocketFactory", Address());
