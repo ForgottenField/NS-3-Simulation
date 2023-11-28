@@ -33,21 +33,21 @@ def extract_value(value_str):
     return float(match.group()) if match else None
 
 def process_data(data, qos_parameter):
-    tcp_rates = []
+    router_buffers = []
     qos_values = []
 
     for entry in data:
         parameters = entry['parameters']
         qos = entry['qos']
 
-        tcp_rate = extract_value(parameters['TCP_rate'])
+        router_buffer = extract_value(parameters['router_buffer_size'])
         qos_value = extract_value(qos[qos_parameter])
 
-        if tcp_rate is not None and qos_value is not None:
-            tcp_rates.append(tcp_rate)
+        if router_buffer is not None and qos_value is not None:
+            router_buffers.append(router_buffer)
             qos_values.append(qos_value)
 
-    return tcp_rates, qos_values
+    return router_buffers, qos_values
 
 def plot_figure(x, y, xlabel, ylabel, title, filename):
     plt.plot(x, y, marker='o')
@@ -64,18 +64,18 @@ def get_unit(qos_parameter):
     elif qos_parameter == 'Transmission Delay':
         return 'e+07ns'
     elif qos_parameter == 'Packet Loss Rate':
-        return ''
+        return '(txPackets - rxPackets) / txPackets'
     elif qos_parameter == 'Jitter':
         return 'ns'
     else:
         return 'units'
 
 if __name__ == "__main__":
-    file_path = "ATCN-Program-Tcprate.txt"
+    file_path = "ATCN-Program-routerBufferSize.txt"
     data = read_data(file_path)
     #print(data)
     for qos_parameter in ['Throughput', 'Transmission Delay', 'Packet Loss Rate', 'Jitter']:
-        tcp_rates, qos_values = process_data(data, qos_parameter)
+        router_buffers, qos_values = process_data(data, qos_parameter)
         unit = get_unit(qos_parameter)  # Implement get_unit function based on your requirements
-        plot_filename = f'{qos_parameter}_vs_TCP_Rate.png'
-        plot_figure(tcp_rates, qos_values, 'TCP Rate', f'{qos_parameter} ({unit})', f'{qos_parameter} vs. TCP Rate', plot_filename)
+        plot_filename = f'{qos_parameter}_vs_Router_Buffer_Size.png'
+        plot_figure(router_buffers, qos_values, 'Router Buffer Size', f'{qos_parameter} ({unit})', f'{qos_parameter} vs. Router Buffer Size', plot_filename)
