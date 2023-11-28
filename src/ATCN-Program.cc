@@ -185,10 +185,10 @@ main (int argc, char *argv[])
     //LogComponentEnable("Socket", LOG_LEVEL_FUNCTION);
     
     // Command-line arguments
-    uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
-    uint32_t tcpRateMbps = 2;   // TCP sending rate in Mbps
-    uint32_t bufferSize = 16; // TCP buffer size
-    uint32_t routerBufferSize = 16;
+    uint32_t udpRateMbps = 10;   // UDP sending rate in Mbps
+    uint32_t tcpRateMbps = 20;   // TCP sending rate in Mbps
+    uint32_t bufferSize = 12; // TCP buffer size
+    uint32_t routerBufferSize = 12;
     // MTU refers to payload in Data Link Layer, while MSS refers to payload in Transport Layer
     // MTU = MSS + 20 + 20
     uint32_t mtu_bytes = 400;
