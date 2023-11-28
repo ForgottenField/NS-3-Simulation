@@ -51,9 +51,9 @@ def process_data(data, qos_parameter):
 
 def plot_figure(x, y, xlabel, ylabel, title, filename):
     plt.plot(x, y, marker='o')
-    plt.xlabel(f'{xlabel} (Mbps)')
+    plt.xlabel(f'{xlabel} (bytes)')
     plt.ylabel(f'{ylabel}')
-    plt.title(f'{title} vs. {xlabel} (Mbps)')
+    plt.title(f'{title} vs. {xlabel} (bytes)')
     plt.grid(True)
     plt.savefig(filename)
     plt.close()
