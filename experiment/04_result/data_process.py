@@ -15,7 +15,7 @@ def process_data(file_path):
     return times, cwnd_sizes
 
 def plot_figure(times, cwnd_sizes, output_file):
-    plt.figure(figsize=(30, 10))  # Adjust the figsize parameter to change the figure size
+    plt.figure(figsize=(10, 6))  # Adjust the figsize parameter to change the figure size
     plt.plot(times, cwnd_sizes)
     plt.xlabel('Time (seconds)')
     plt.ylabel('Congestion Window Size (MSS)')

@@ -231,7 +231,7 @@ main (int argc, char *argv[])
         Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TypeId::LookupByName (congestion_control_algo)));
     }
 
-    float time_to_stop_data = 10.0;
+    float time_to_stop_data = 1.0;
 
     // Create a TCP sender (OnOffApplication)
     OnOffHelper tcpOnOffHelper("ns3::TcpSocketFactory", Address());
