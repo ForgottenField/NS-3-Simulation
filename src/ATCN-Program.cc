@@ -95,7 +95,7 @@ main (int argc, char *argv[])
     //LogComponentEnable("Socket", LOG_LEVEL_FUNCTION);
     
     // Command-line arguments
-    uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
+    uint32_t udpRateMbps = 10;   // UDP sending rate in Mbps
     uint32_t tcpRateMbps = 20;   // TCP sending rate in Mbps
     uint32_t bufferSize = 16; // TCP buffer size
     uint32_t routerBufferSize = 16;
@@ -231,7 +231,7 @@ main (int argc, char *argv[])
         Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TypeId::LookupByName (congestion_control_algo)));
     }
 
-    float time_to_stop_data = 1.0;
+    float time_to_stop_data = 5.0;
 
     // Create a TCP sender (OnOffApplication)
     OnOffHelper tcpOnOffHelper("ns3::TcpSocketFactory", Address());
