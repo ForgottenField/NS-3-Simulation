@@ -14,15 +14,8 @@ using namespace ns3;
 
 static bool firstCwnd = true;
 static bool firstSshThr = true;
-static bool firstRtt = true;
-static bool firstRto = true;
 static Ptr<OutputStreamWrapper> cWndStream;
 static Ptr<OutputStreamWrapper> ssThreshStream;
-static Ptr<OutputStreamWrapper> rttStream;
-static Ptr<OutputStreamWrapper> rtoStream;
-static Ptr<OutputStreamWrapper> nextTxStream;
-static Ptr<OutputStreamWrapper> nextRxStream;
-static Ptr<OutputStreamWrapper> inFlightStream;
 static uint32_t cWndValue;
 static uint32_t ssThreshValue;
 
@@ -73,49 +66,6 @@ SsThreshTracer (uint32_t oldval, uint32_t newval)
 }
 
 static void
-RttTracer (Time oldval, Time newval)
-{
-  if (firstRtt)
-    {
-      *rttStream->GetStream () << "0.0 " << oldval.GetSeconds () << std::endl;
-      firstRtt = false;
-    }
-  *rttStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval.GetSeconds () << std::endl;
-}
-
-static void
-RtoTracer (Time oldval, Time newval)
-{
-  if (firstRto)
-    {
-      *rtoStream->GetStream () << "0.0 " << oldval.GetSeconds () << std::endl;
-      firstRto = false;
-    }
-  *rtoStream->GetStream () << Simulator::Now ().GetSeconds () << " " << newval.GetSeconds () << std::endl;
-}
-
-static void
-NextTxTracer (SequenceNumber32 old, SequenceNumber32 nextTx)
-{
-  NS_UNUSED (old);
-  *nextTxStream->GetStream () << Simulator::Now ().GetSeconds () << " " << nextTx << std::endl;
-}
-
-static void
-InFlightTracer (uint32_t old, uint32_t inFlight)
-{
-  NS_UNUSED (old);
-  *inFlightStream->GetStream () << Simulator::Now ().GetSeconds () << " " << inFlight << std::endl;
-}
-
-static void
-NextRxTracer (SequenceNumber32 old, SequenceNumber32 nextRx)
-{
-  NS_UNUSED (old);
-  *nextRxStream->GetStream () << Simulator::Now ().GetSeconds () << " " << nextRx << std::endl;
-}
-
-static void
 TraceCwnd (std::string cwnd_tr_file_name)
 {
   AsciiTraceHelper ascii;
@@ -129,46 +79,6 @@ TraceSsThresh (std::string ssthresh_tr_file_name)
   AsciiTraceHelper ascii;
   ssThreshStream = ascii.CreateFileStream (ssthresh_tr_file_name.c_str ());
   Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/SlowStartThreshold", MakeCallback (&SsThreshTracer));
-}
-
-static void
-TraceRtt (std::string rtt_tr_file_name)
-{
-  AsciiTraceHelper ascii;
-  rttStream = ascii.CreateFileStream (rtt_tr_file_name.c_str ());
-  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/RTT", MakeCallback (&RttTracer));
-}
-
-static void
-TraceRto (std::string rto_tr_file_name)
-{
-  AsciiTraceHelper ascii;
-  rtoStream = ascii.CreateFileStream (rto_tr_file_name.c_str ());
-  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/RTO", MakeCallback (&RtoTracer));
-}
-
-static void
-TraceNextTx (std::string &next_tx_seq_file_name)
-{
-  AsciiTraceHelper ascii;
-  nextTxStream = ascii.CreateFileStream (next_tx_seq_file_name.c_str ());
-  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/NextTxSequence", MakeCallback (&NextTxTracer));
-}
-
-static void
-TraceInFlight (std::string &in_flight_file_name)
-{
-  AsciiTraceHelper ascii;
-  inFlightStream = ascii.CreateFileStream (in_flight_file_name.c_str ());
-  Config::ConnectWithoutContext ("/NodeList/0/$ns3::TcpL4Protocol/SocketList/0/BytesInFlight", MakeCallback (&InFlightTracer));
-}
-
-static void
-TraceNextRx (std::string &next_rx_seq_file_name)
-{
-  AsciiTraceHelper ascii;
-  nextRxStream = ascii.CreateFileStream (next_rx_seq_file_name.c_str ());
-  Config::ConnectWithoutContext ("/NodeList/6/$ns3::TcpL4Protocol/SocketList/1/RxBuffer/NextRxSequence", MakeCallback (&NextRxTracer));
 }
 
 int 
@@ -186,7 +96,7 @@ main (int argc, char *argv[])
     
     // Command-line arguments
     uint32_t udpRateMbps = 1;   // UDP sending rate in Mbps
-    uint32_t tcpRateMbps = 2;   // TCP sending rate in Mbps
+    uint32_t tcpRateMbps = 20;   // TCP sending rate in Mbps
     uint32_t bufferSize = 16; // TCP buffer size
     uint32_t routerBufferSize = 16;
     // MTU refers to payload in Data Link Layer, while MSS refers to payload in Transport Layer
@@ -195,7 +105,7 @@ main (int argc, char *argv[])
     bool sack = true;
     bool tcpNoDelay = true;
     std::string recovery = "ns3::TcpClassicRecovery";
-    std::string congestion_control_algo = "TcpWestwood";
+    std::string congestion_control_algo = "TcpNewReno";
     bool tracing = true;
     bool pcap = false;
     bool monitor = false;
@@ -447,19 +357,14 @@ main (int argc, char *argv[])
     // Set up tracing if enabled
     if (tracing)
     {
-        std::ofstream ascii;
-        Ptr<OutputStreamWrapper> ascii_wrap;
-        ascii.open ((file_name_prefix + "-ascii").c_str ());
-        ascii_wrap = new OutputStreamWrapper ((file_name_prefix + "-ascii").c_str (), std::ios::out);
-        stack.EnableAsciiIpv4All (ascii_wrap);
+        //std::ofstream ascii;
+        //Ptr<OutputStreamWrapper> ascii_wrap;
+        //ascii.open ((file_name_prefix + "-ascii").c_str ());
+        //ascii_wrap = new OutputStreamWrapper ((file_name_prefix + "-ascii").c_str (), std::ios::out);
+        //stack.EnableAsciiIpv4All (ascii_wrap);
 
         Simulator::Schedule (Seconds (0.00001), &TraceCwnd, file_name_prefix + "-cwnd.txt");
         Simulator::Schedule (Seconds (0.00001), &TraceSsThresh, file_name_prefix + "-ssth.txt");
-        Simulator::Schedule (Seconds (0.00001), &TraceRtt, file_name_prefix + "-rtt.txt");
-        Simulator::Schedule (Seconds (0.00001), &TraceRto, file_name_prefix + "-rto.txt");
-        Simulator::Schedule (Seconds (0.00001), &TraceNextTx, file_name_prefix + "-next-tx.txt");
-        Simulator::Schedule (Seconds (0.00001), &TraceInFlight, file_name_prefix + "-inflight.txt");
-        Simulator::Schedule (Seconds (0.1), &TraceNextRx, file_name_prefix + "-next-rx.txt");
     }
 
     if(pcap){

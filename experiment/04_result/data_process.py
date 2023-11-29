@@ -15,6 +15,7 @@ def process_data(file_path):
     return times, cwnd_sizes
 
 def plot_figure(times, cwnd_sizes, output_file):
+    plt.figure(figsize=(30, 10))  # Adjust the figsize parameter to change the figure size
     plt.plot(times, cwnd_sizes)
     plt.xlabel('Time (seconds)')
     plt.ylabel('Congestion Window Size (MSS)')
@@ -22,7 +23,7 @@ def plot_figure(times, cwnd_sizes, output_file):
     plt.grid(True)
     # Adjust the x-axis limits
     plt.xlim(min(times), max(times))
-    plt.savefig(output_file)  # Save the figure to a PNG file
+    plt.savefig(output_file, bbox_inches='tight')  # Save the figure to a PNG file
     plt.close()
 
 if __name__ == "__main__":
